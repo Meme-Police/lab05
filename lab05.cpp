@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-string rendering(string e);
+void rendering(string e) { cout << e; };
 string cannonisation(string e);
 bool homograph(string a, string b);
 
