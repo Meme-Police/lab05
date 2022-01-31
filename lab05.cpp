@@ -4,9 +4,19 @@
 #include <iostream>
 using namespace std;
 
-void rendering(string e) { cout << e; };
+void rendering(string e) { cout << e; }
 string cannonisation(string e);
 bool homograph(string a, string b);
+
+bool homograph(string a, string b)
+{
+	if (cannonisation(a) == cannonisation(b))
+	{
+		return true;
+	}
+	
+	return false;
+}
 
 
 int main()
