@@ -1,16 +1,16 @@
-// lab05.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// lab05.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
 using namespace std;
 
 void rendering(string e) { cout << e; }
-string cannonisation(string e);
+string canonicalization(string e);
 bool homograph(string a, string b);
 
 bool homograph(string a, string b)
 {
-	if (cannonisation(a) == cannonisation(b))
+	if (canonicalization(a) == canonicalization(b))
 	{
 		return true;
 	}
@@ -18,19 +18,26 @@ bool homograph(string a, string b)
 	return false;
 }
 
+string canonicalization(string e)
+{
+	// Unique Cannonisation Rule
+	// ∀ e1, e2 C(e1) ≠ C(e2) ↔ H(e1, e2) < p
+	// For all pairs of encodings, if they are not homographs, they must have different cannonisation
+
+	// Reliable Cannonisation Rule
+	// ∀ e1, e2 C(e1) = C(e2) ↔ H(e1, e2) ≥ p
+	// For all pairs of encodings, if they are homographs, the cannonisation must be the same
+
+	// TODO: Implement the cannonisation function
+
+	// placeholder
+	return "none";
+}
+
+
+
 
 int main()
 {
 	cout << "hello world";
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
