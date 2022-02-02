@@ -45,7 +45,7 @@ list<string> stringListConversion (string s)
 
 	while(currentPosition != -1)
 	{
-		currentPosition = s.find_first_of('/', position);
+		currentPosition = s.find_first_of('\', position);
 		filePathList.push_back(s.substr(position, currentPosition-position));
 		position = currentPosition + 1;
 	}
@@ -58,7 +58,7 @@ list<string> stringListConversion (string s)
 int main()
 {
 	// CAN BE REMOVED (Test of breaking apart the file path)
-	string filePath = "C:/secret/password.txt";
+	string filePath = "C:\secret\password.txt";
 	list<string> filePathList;
 
 	filePathList = stringListConversion(filePath);
