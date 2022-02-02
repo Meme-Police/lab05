@@ -2,6 +2,8 @@
 //
 
 #include <iostream>
+#include <list>
+#include <sstream>
 using namespace std;
 
 void rendering(string e) { cout << e; }
@@ -34,10 +36,38 @@ string canonicalization(string e)
 	return "none";
 }
 
+list<string> stringListConversion (string s)
+{
+	list<string> filePathList;
+   istringstream iss(s);
 
+	size_t position = 0, currentPosition = 0;
+
+	while(currentPosition != -1)
+	{
+		currentPosition = s.find_first_of('/', position);
+		filePathList.push_back(s.substr(position, currentPosition-position));
+		position = currentPosition + 1;
+	}
+
+
+	return filePathList;
+}
 
 
 int main()
 {
-	cout << "hello world";
-}
+	// CAN BE REMOVED (Test of breaking apart the file path)
+	string filePath = "C:/secret/password.txt";
+	list<string> filePathList;
+
+	filePathList = stringListConversion(filePath);
+
+	for(list<string>::iterator it = filePathList.begin(); it != filePathList.end(); it++)
+	{
+		cout << *it << endl;
+	}
+	// CAN BE REMOVED end OF file path test
+
+	return 0;
+} // end of main
