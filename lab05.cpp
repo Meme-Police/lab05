@@ -5,17 +5,39 @@
 #include <list>
 #include <sstream>
 #include <iterator>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
+struct testCase
+{
+	testCase(string a, string b, string d)
+	{
+		this->a = a;
+		this->b = b;
+		this->d = d;
+	}
+	string a;
+	string b;
+	string d;
+};
+
+// PUT TEST CASES HERE
+vector<testCase> testCases = {
+	testCase("C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public"),
+	testCase("C:\\doccuments\\bank_info\\bank_number.txt", ".\\bank_info\\banknumber.txt", "D:\\other\\trip")
+};
+
+// { {"C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public"} };
+
 void rendering(string e) { cout << e; }
-string canonicalization(string e, string d);
+list<string> canonicalization(string e, string d);
 bool homograph(string a, string b, string d);
 list<string> stringListConversion(string s);
 
 bool homograph(string a, string b, string d)
 {
 	// string a is the first filepath, b is the seccond, and d is the current directory
-	
 	if (canonicalization(a, d) == canonicalization(b, d))
 	{
 		return true;
@@ -32,7 +54,7 @@ string get(list<string> l, int index)
 	return *it;
 }
 
-string canonicalization(string e, string d)
+list<string> canonicalization(string e, string d)
 {
 	// Unique Cannonisation Rule
 	// ∀ e1, e2 C(e1) ≠ C(e2) ↔ H(e1, e2) < p
@@ -56,15 +78,18 @@ string canonicalization(string e, string d)
 			listC.push_back(x);
 			
 	}
-
-	for (int i = 0; i < listC.size(); i++)
+	
+	/*cout << listC.size();
+	for (int i = 0; i <= listC.size(); i++)
 	{
+		cout << "step";
+		//cout << listC.front() << endl;
 		string x = listC.front();
 		c += x;
 		listC.pop_front();
 	}
-
-	return c;
+	*/
+	return listC;
 }
 
 list<string> stringListConversion(string s)
@@ -102,16 +127,20 @@ int main()
 	cout << "size is" << filePathList.size() << endl;
 	 CAN BE REMOVED end OF file path test */
 
-	string testCase1A = "C:\\secret\\password.txt";
-	string testCase1B = ".\\..\\..\\secret\\password.txt";
-	string testCase1D = "C:\\users\\public";
 
-	bool isHomograph = homograph(testCase1A, testCase1B, testCase1D);
+	for (int i = 0; i < testCases.size(); i++)
+	{
+		cout << "TEST " << i << "\n\n";
+		testCase test = testCases[i];
 
-	if (isHomograph)
-		cout << "\"" << testCase1A << "\"" << " and " << "\"" << testCase1B << "\"" << " are homographs when in the directory, \"" << testCase1D << "\"\n";
-	else
-		cout << "\"" << testCase1A << "\"" << " and " << "\"" << testCase1B << "\"" << " are homographs when in the directory, \"" << testCase1D << "\"\n";
+		bool isHomograph = homograph(test.a, test.b, test.d);
+		cout << isHomograph << endl;
+		if (isHomograph)
+			cout << "\"" << test.a << "\"" << " and " << "\"" << test.b << "\"" << " are homographs when in the directory, \"" << test.d << "\"\n\n";
+		else
+			cout << "\"" << test.a << "\"" << " and " << "\"" << test.b << "\"" << " are not homographs when in the directory, \"" << test.d << "\"\n\n";
+	}
+	
 
 	return 0;
 } // end of main
