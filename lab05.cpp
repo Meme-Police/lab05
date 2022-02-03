@@ -6,8 +6,13 @@
 #include <sstream>
 #include <iterator>
 #include <vector>
-#include <algorithm>
 using namespace std;
+
+void rendering(string e) { cout << e; }
+string canonicalization(string e, string d);
+bool homograph(string a, string b, string d);
+list<string> stringListConversion(string s);
+
 
 struct testCase
 {
@@ -22,27 +27,20 @@ struct testCase
 	string d;
 };
 
-// PUT TEST CASES HERE
 vector<testCase> testCases = {
 	testCase("C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public"),
 	testCase("C:\\doccuments\\bank_info\\bank_number.txt", ".\\bank_info\\banknumber.txt", "D:\\other\\trip")
 };
 
-// { {"C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public"} };
-
-void rendering(string e) { cout << e; }
-list<string> canonicalization(string e, string d);
-bool homograph(string a, string b, string d);
-list<string> stringListConversion(string s);
-
 bool homograph(string a, string b, string d)
 {
 	// string a is the first filepath, b is the seccond, and d is the current directory
+
 	if (canonicalization(a, d) == canonicalization(b, d))
 	{
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -54,7 +52,7 @@ string get(list<string> l, int index)
 	return *it;
 }
 
-list<string> canonicalization(string e, string d)
+string canonicalization(string e, string d)
 {
 	// Unique Cannonisation Rule
 	// ∀ e1, e2 C(e1) ≠ C(e2) ↔ H(e1, e2) < p
@@ -70,26 +68,27 @@ list<string> canonicalization(string e, string d)
 	for (int i = 0; i < listE.size(); i++)
 	{
 		string x = get(listE, i);
-		if (x == ".")
+		if (x == "\\\\?")
+			return e;
+		if (x == "." || x == "?" || (x.find(":") && !(x.find("\\"))))
 			listC = listD;
 		else if (x == "..")
 			listC.pop_back();
 		else
 			listC.push_back(x);
-			
+
 	}
-	
-	/*cout << listC.size();
-	for (int i = 0; i <= listC.size(); i++)
+	int size = listC.size();
+	for (int i = 0; i < size; i++)
 	{
-		cout << "step";
-		//cout << listC.front() << endl;
+		if (i != 0)
+			c += "\\";
 		string x = listC.front();
 		c += x;
 		listC.pop_front();
 	}
-	*/
-	return listC;
+	cout << c << endl;
+	return c;
 }
 
 list<string> stringListConversion(string s)
@@ -99,10 +98,10 @@ list<string> stringListConversion(string s)
 
 	size_t position = 0, currentPosition = 0;
 
-	while(currentPosition != -1)
+	while (currentPosition != -1)
 	{
 		currentPosition = s.find_first_of('\\', position);
-		filePathList.push_back(s.substr(position, currentPosition-position));
+		filePathList.push_back(s.substr(position, currentPosition - position));
 		position = currentPosition + 1;
 	}
 
@@ -116,17 +115,17 @@ int main()
 	/* CAN BE REMOVED (Test of breaking apart the file path)
 	string filePath = "C:\\secret\\password.txt";
 	list<string> filePathList;
-
 	filePathList = stringListConversion(filePath);
-
 	for(list<string>::iterator it = filePathList.begin(); it != filePathList.end(); it++)
 	{
 		cout << *it << endl;
 	}
-
 	cout << "size is" << filePathList.size() << endl;
 	 CAN BE REMOVED end OF file path test */
 
+	string testCase1A = "C:\\secret\\password.txt";
+	string testCase1B = ".\\..\\..\\secret\\password.txt";
+	string testCase1D = "C:\\users\\public";
 
 	for (int i = 0; i < testCases.size(); i++)
 	{
@@ -140,7 +139,6 @@ int main()
 		else
 			cout << "\"" << test.a << "\"" << " and " << "\"" << test.b << "\"" << " are not homographs when in the directory, \"" << test.d << "\"\n\n";
 	}
-	
 
 	return 0;
 } // end of main
