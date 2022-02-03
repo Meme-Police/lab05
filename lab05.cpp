@@ -4,15 +4,19 @@
 #include <iostream>
 #include <list>
 #include <sstream>
+#include <iterator>
 using namespace std;
 
 void rendering(string e) { cout << e; }
-string canonicalization(string e);
-bool homograph(string a, string b);
+string canonicalization(string e, string d);
+bool homograph(string a, string b, string d);
+list<string> stringListConversion(string s);
 
-bool homograph(string a, string b)
+bool homograph(string a, string b, string d)
 {
-	if (canonicalization(a) == canonicalization(b))
+	// string a is the first filepath, b is the seccond, and d is the current directory
+	
+	if (canonicalization(a, d) == canonicalization(b, d))
 	{
 		return true;
 	}
@@ -20,7 +24,15 @@ bool homograph(string a, string b)
 	return false;
 }
 
-string canonicalization(string e)
+string get(list<string> l, int index)
+{
+	auto it = l.begin();
+	for (int i = 0; i < index; i++)
+		it++;
+	return *it;
+}
+
+string canonicalization(string e, string d)
 {
 	// Unique Cannonisation Rule
 	// ∀ e1, e2 C(e1) ≠ C(e2) ↔ H(e1, e2) < p
@@ -29,17 +41,36 @@ string canonicalization(string e)
 	// Reliable Cannonisation Rule
 	// ∀ e1, e2 C(e1) = C(e2) ↔ H(e1, e2) ≥ p
 	// For all pairs of encodings, if they are homographs, the cannonisation must be the same
+	list<string> listE = stringListConversion(e);
+	list<string> listD = stringListConversion(d);
+	list<string> listC = {};
+	string c = "";
+	for (int i = 0; i < listE.size(); i++)
+	{
+		string x = get(listE, i);
+		if (x == ".")
+			listC = listD;
+		else if (x == "..")
+			listC.pop_back();
+		else
+			listC.push_back(x);
+			
+	}
 
-	// TODO: Implement the cannonisation function
+	for (int i = 0; i < listC.size(); i++)
+	{
+		string x = listC.front();
+		c += x;
+		listC.pop_front();
+	}
 
-	// placeholder
-	return "none";
+	return c;
 }
 
-list<string> stringListConversion (string s)
+list<string> stringListConversion(string s)
 {
 	list<string> filePathList;
-   istringstream iss(s);
+	istringstream iss(s);
 
 	size_t position = 0, currentPosition = 0;
 
@@ -57,7 +88,7 @@ list<string> stringListConversion (string s)
 
 int main()
 {
-	// CAN BE REMOVED (Test of breaking apart the file path)
+	/* CAN BE REMOVED (Test of breaking apart the file path)
 	string filePath = "C:\\secret\\password.txt";
 	list<string> filePathList;
 
@@ -67,7 +98,20 @@ int main()
 	{
 		cout << *it << endl;
 	}
-	// CAN BE REMOVED end OF file path test
+
+	cout << "size is" << filePathList.size() << endl;
+	 CAN BE REMOVED end OF file path test */
+
+	string testCase1A = "C:\\secret\\password.txt";
+	string testCase1B = ".\\..\\..\\secret\\password.txt";
+	string testCase1D = "C:\\users\\public";
+
+	bool isHomograph = homograph(testCase1A, testCase1B, testCase1D);
+
+	if (isHomograph)
+		cout << "\"" << testCase1A << "\"" << " and " << "\"" << testCase1B << "\"" << " are homographs when in the directory, \"" << testCase1D << "\"\n";
+	else
+		cout << "\"" << testCase1A << "\"" << " and " << "\"" << testCase1B << "\"" << " are homographs when in the directory, \"" << testCase1D << "\"\n";
 
 	return 0;
 } // end of main
