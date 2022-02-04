@@ -67,16 +67,32 @@ string canonicalization(string e, string d)
 	string c = "";
 	for (int i = 0; i < listE.size(); i++)
 	{
+		
 		string x = get(listE, i);
+		
 		if (x == "\\\\?")
 			return e;
-		if (x == "." || x == "?" || (x.find(":") && !(x.find("\\"))))
+		if (i == 0)
 			listC = listD;
-		else if (x == "..")
-			listC.pop_back();
-		else
-			listC.push_back(x);
+		if (x == "." || x == "?")
+		{
+			listC = listD;
+		}
+		else if (x.find(":") != -1)
+		{
+			listC = { x };
+		}
 
+		else if (x == "..")
+		{
+			listC.pop_back();
+		}
+			
+		else
+		{
+			listC.push_back(x);
+		}
+			
 	}
 	int size = listC.size();
 	for (int i = 0; i < size; i++)
@@ -139,6 +155,23 @@ int main()
 		else
 			cout << "\"" << test.a << "\"" << " and " << "\"" << test.b << "\"" << " are not homographs when in the directory, \"" << test.d << "\"\n\n";
 	}
+
+	string path1;
+	string path2;
+	string directory;
+	cout << "enter first file path: ";
+	cin >> path1;
+	cout << "enter seccond file path: ";
+	cin >> path2;
+	cout << "enter name of current directory: ";
+	cin >> directory;
+
+	bool isHomograph = homograph(path1, path2, directory);
+	cout << isHomograph << endl;
+	if (isHomograph)
+		cout << "\"" << path1 << "\"" << " and " << "\"" << path2 << "\"" << " are homographs when in the directory, \"" << directory << "\"\n\n";
+	else
+		cout << "\"" << path1 << "\"" << " and " << "\"" << path2 << "\"" << " are not homographs when in the directory, \"" << directory << "\"\n\n";
 
 	return 0;
 } // end of main
