@@ -28,8 +28,18 @@ struct testCase
 };
 
 vector<testCase> testCases = {
-	testCase("C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public"),
-	testCase("C:\\doccuments\\bank_info\\bank_number.txt", ".\\bank_info\\banknumber.txt", "D:\\other\\trip")
+	
+	
+//non homegraph
+	testCase("c:\\?\secret\password.txt", "c:\secret\password.txt", "c:\users\public"),
+	testCase("c:\secret\password.txt", "d:\secret\password.txt", "c:\users\public"),
+	testCase("12395940", "c:\secret\password.txt", "c:\users\public"),
+	testCase("C:\\doccuments\\bank_info\\bank_number.txt", ".\\bank_info\\banknumber.txt", "D:\\other\\trip"),
+
+// homograph
+	testCase("c:secret\password.txt" , "c:users\public\secret\password.txt", "c:\users\public" ),
+	testCase("\\.\C:\Test\Foo.txt", "\\?\C:\Test\Foo.txt", "C:\users"),
+	testCase("C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public")
 };
 
 bool homograph(string a, string b, string d)
