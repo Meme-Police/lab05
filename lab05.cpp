@@ -32,14 +32,14 @@ vector<testCase> testCases = {
 	
 	
 //non homegraph
-	testCase("c:\\\\?\\secret\\password.txt", "c:\\secret\\password.txt", "c:\\users\\public"),
+	testCase("c:\\\\?\\..\\..\\secret\\password.txt", "c:\\secret\\password.txt", "c:\\users\\public"),
 	testCase("c:\\secret\\password.txt", "d:\\secret\\password.txt", "c:\\users\\public"),
 	testCase("12395940", "c:\\secret\\password.txt", "c:\\users\\public"),
 	testCase("C:\\doccuments\\bank_info\\bank_number.txt", ".\\bank_info\\banknumber.txt", "D:\\other\\trip"),
 
 // homograph
 	testCase("c:secret\\password.txt" , "c:\\users\\public\\secret\\password.txt", "c:\\users\\public" ),
-	testCase(".\\C:\Test\\Foo.txt", "\\?\C:\Test\\Foo.txt", "C:\\users"),
+	testCase(".\\C:\Test\\Foo.txt", "C:\Test\\Foo.txt", "C:\\users"),
 	testCase("C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public")
 };
 
@@ -82,7 +82,10 @@ string canonicalization(string e, string d)
 		string x = getString(listE, i);
 		
 		if (x == "?")
-			return e;
+		{
+			cout << e.substr(e.find("?") + 1) << endl;
+			return e.substr(e.find("?") + 1);
+		}
 		if (i == 0)
 			listC = listD;
 		if (x == ".")
@@ -91,7 +94,7 @@ string canonicalization(string e, string d)
 		}
 		else if (x.find(":") != -1)
 		{
-			if (x.size() > 2)\
+			if (x.size() > 2)
 			{
 				listC = listD;
 				listC.push_back(x.substr(2));
