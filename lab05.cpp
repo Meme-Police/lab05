@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iterator>
 #include <vector>
+#include <string.h>
 using namespace std;
 
 void rendering(string e) { cout << e; }
@@ -31,14 +32,14 @@ vector<testCase> testCases = {
 	
 	
 //non homegraph
-	testCase("c:\\?\secret\password.txt", "c:\secret\password.txt", "c:\users\public"),
-	testCase("c:\secret\password.txt", "d:\secret\password.txt", "c:\users\public"),
-	testCase("12395940", "c:\secret\password.txt", "c:\users\public"),
+	testCase("c:\\\\?\\secret\\password.txt", "c:\\secret\\password.txt", "c:\\users\\public"),
+	testCase("c:\\secret\\password.txt", "d:\\secret\\password.txt", "c:\\users\\public"),
+	testCase("12395940", "c:\\secret\\password.txt", "c:\\users\\public"),
 	testCase("C:\\doccuments\\bank_info\\bank_number.txt", ".\\bank_info\\banknumber.txt", "D:\\other\\trip"),
 
 // homograph
-	testCase("c:secret\password.txt" , "c:users\public\secret\password.txt", "c:\users\public" ),
-	testCase("\\.\C:\Test\Foo.txt", "\\?\C:\Test\Foo.txt", "C:\users"),
+	testCase("c:secret\\password.txt" , "c:\\users\\public\\secret\\password.txt", "c:\\users\\public" ),
+	testCase(".\\C:\Test\\Foo.txt", "\\?\C:\Test\\Foo.txt", "C:\\users"),
 	testCase("C:\\secret\\password.txt", ".\\..\\..\\secret\\password.txt", "C:\\users\\public")
 };
 
@@ -54,7 +55,7 @@ bool homograph(string a, string b, string d)
 	return false;
 }
 
-string get(list<string> l, int index)
+string getString(list<string> l, int index)
 {
 	auto it = l.begin();
 	for (int i = 0; i < index; i++)
@@ -78,19 +79,26 @@ string canonicalization(string e, string d)
 	for (int i = 0; i < listE.size(); i++)
 	{
 		
-		string x = get(listE, i);
+		string x = getString(listE, i);
 		
-		if (x == "\\\\?")
+		if (x == "?")
 			return e;
 		if (i == 0)
 			listC = listD;
-		if (x == "." || x == "?")
+		if (x == ".")
 		{
 			listC = listD;
 		}
 		else if (x.find(":") != -1)
 		{
-			listC = { x };
+			if (x.size() > 2)\
+			{
+				listC = listD;
+				listC.push_back(x.substr(2));
+			}
+
+			else
+				listC = { x };
 		}
 
 		else if (x == "..")
